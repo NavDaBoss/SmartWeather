@@ -6,6 +6,8 @@ A minimal ASP.NET Core web application that serves a weather forecast API and st
 
 - Global weather forecast lookup by city name.
 - Handles ambigious city names by allowing users to choose from a dropdown.
+- Displays five day weather forecast in both Fahrenheit or Celsius (Toggleable).
+- Shows hi, low, humidity, wind speed, and chance of precipitation for each day.
 
 ## Requirements
 
