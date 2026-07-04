@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nav's Weather App</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <h1 id="forecast-title">LA 5-Day Forecast</h1>
+        <div id="location-info" class="location-info"></div>
+        <form id="city-form" class="city-form">
+            <input type="text" id="city-input" placeholder="Enter any city..." autocomplete="off" />
+            <button type="submit" id="search-btn" disabled>Search</button>
+        </form>
+        <div id="location-picker-container" class="location-picker-container" hidden>
+            <label for="location-select">Select the exact city, state/province, and country:</label>
+            <select id="location-select">
+                <option value="">Choose a location</option>
+            </select>
+            <button type="button" id="location-confirm-btn">Use this location</button>
+        </div>
+        <div id="toggle-btn-container" class="toggle-btn-container"></div>
+        <div id="forecast"></div>
+        <div id="error" class="error"></div>
+    </div>
+    <script src="main.js"></script>
+</body>
+
+</html>
