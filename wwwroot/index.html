@@ -13,6 +13,7 @@
     <div id="app">
         <h1 id="forecast-title">LA 5-Day Forecast</h1>
         <div id="location-info" class="location-info"></div>
+        <div id="theme-toggle-container" class="theme-toggle-container"></div>
         <form id="city-form" class="city-form">
             <input type="text" id="city-input" placeholder="Enter any city..." autocomplete="off" />
             <button type="submit" id="search-btn" disabled>Search</button>
@@ -24,7 +25,7 @@
             </select>
             <button type="button" id="location-confirm-btn">Use this location</button>
         </div>
-        <div id="toggle-btn-container" class="toggle-btn-container"></div>
+        <div id="toggle-btn-container" class="toggle-btn-container" hidden></div>
         <div id="forecast"></div>
         <div id="error" class="error"></div>
     </div>

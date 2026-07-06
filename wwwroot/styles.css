@@ -1,32 +1,81 @@
+:root {
+    color-scheme: light;
+    --bg-start: #74ebd5;
+    --bg-end: #ACB6E5;
+    --surface: rgba(255,255,255,0.95);
+    --surface-alt: rgba(255,255,255,0.7);
+    --text: #1f2937;
+    --heading: #333;
+    --muted: #555;
+    --accent: #0077b6;
+    --accent-strong: #023e8a;
+    --card-start: #efd671;
+    --card-mid: #FFECA1;
+    --card-end: #E0E0E0;
+    --input-bg: #fff;
+    --input-border: #cbd5e1;
+    --shadow: rgba(44,62,80,0.15);
+    --shadow-soft: rgba(44,62,80,0.08);
+    --error: #c0392b;
+    --location: #1d4ed8;
+}
+
+body[data-theme='dark'] {
+    color-scheme: dark;
+    --bg-start: #0f172a;
+    --bg-end: #1e293b;
+    --surface: rgba(15, 23, 42, 0.92);
+    --surface-alt: rgba(30, 41, 59, 0.74);
+    --text: #f8fafc;
+    --heading: #f8fafc;
+    --muted: #cbd5e1;
+    --accent: #38bdf8;
+    --accent-strong: #0ea5e9;
+    --card-start: #7c3aed;
+    --card-mid: #8b5cf6;
+    --card-end: #1e1b4b;
+    --input-bg: #0f172a;
+    --input-border: #475569;
+    --shadow: rgba(2, 6, 23, 0.45);
+    --shadow-soft: rgba(2, 6, 23, 0.28);
+    --error: #f87171;
+    --location: #7dd3fc;
+}
+
 body {
-    background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+    color: var(--text);
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
-.container {
-    max-width: 500px;
+#app {
+    max-width: 780px;
     margin: 40px auto;
-    background: rgba(255,255,255,0.95);
+    background: var(--surface);
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(44,62,80,0.15);
+    box-shadow: 0 8px 32px var(--shadow);
     padding: 32px 24px;
     text-align: center;
 }
 
+.theme-toggle-container,
 .toggle-btn-container {
     display: flex;
     justify-content: center;
+    gap: 10px;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 h1 {
     display: flex;
     justify-content: center;
-    margin-bottom: 32px;
-    color: #333;
+    margin-bottom: 24px;
+    color: var(--heading);
 }
 
 .forecast-list {
@@ -37,10 +86,9 @@ h1 {
 }
 
 .forecast-card {
-    background: linear-gradient(100deg, #efd671 0%, #FFECA1 40%, #E0E0E0 100%);
-
+    background: linear-gradient(100deg, var(--card-start) 0%, var(--card-mid) 40%, var(--card-end) 100%);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+    box-shadow: 0 2px 8px var(--shadow-soft);
     padding: 18px 10px;
     flex: 1;
     min-width: 80px;
@@ -59,20 +107,20 @@ h1 {
 .forecast-card .temp {
     font-size: 2rem;
     font-weight: bold;
-    color: #0077b6;
+    color: var(--accent);
     margin-bottom: 6px;
 }
 
 .forecast-card .desc {
     font-size: 0.95rem;
-    color: #555;
+    color: var(--muted);
     text-transform: capitalize;
 }
 
 .error {
     display: flex;
     justify-content: center;
-    color: #c0392b;
+    color: var(--error);
     font-size: 1.3rem;
     margin-top: 20px;
     font-weight: bold;
@@ -81,7 +129,7 @@ h1 {
 .loading {
     display: flex;
     justify-content: center;
-    color: gray;
+    color: var(--muted);
     font-size: 1.3rem;
     margin-top: 20px;
     font-weight: bold;
@@ -95,7 +143,7 @@ h1 {
 }
 
 .toggle-btn {
-    background: #0077b6;
+    background: var(--accent);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -103,25 +151,25 @@ h1 {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+    transition: background 0.2s ease, transform 0.2s ease;
+    margin-top: 6px;
+    box-shadow: 0 2px 8px var(--shadow-soft);
 }
 .toggle-btn:hover {
-    background: #023e8a;
+    background: var(--accent-strong);
+    transform: translateY(-1px);
 }
 
 .forecast-card .highlow {
     font-size: 1rem;
     margin-bottom: 6px;
-    color: #555;
+    color: var(--muted);
     display: flex;
     gap: 10px;
     justify-content: center;
 }
 .forecast-card .high {
-    color: #d7263d;
+    color: #e56374;
     font-weight: 600;
 }
 .forecast-card .low {
@@ -135,16 +183,16 @@ h1 {
     justify-content: center;
     margin-top: 6px;
     font-size: 0.95rem;
-    color: #555;
+    color: var(--muted);
 }
 .forecast-card .humidity {
-    color: #0099cc;
+    color: var(--accent);
 }
 .forecast-card .wind {
-    color: #555;
+    color: var(--muted);
 }
 .forecast-card .precipitation {
-    color: #0077b6;
+    color: var(--accent);
 }
 
 .city-form {
@@ -158,21 +206,23 @@ h1 {
 .city-form input[type="text"] {
     padding: 10px 14px;
     border-radius: 10px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--input-border);
     font-size: 1rem;
     width: 220px;
     box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.08);
     outline: none;
+    background: var(--input-bg);
+    color: var(--text);
 }
 
 .city-form input[type="text"]:focus {
-    border-color: #0077b6;
+    border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.16);
 }
 
 .city-form button,
 .location-picker-container button {
-    background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -186,7 +236,7 @@ h1 {
 
 .city-form button:hover,
 .location-picker-container button:hover {
-    background: linear-gradient(135deg, #023e8a 0%, #0077b6 100%);
+    background: linear-gradient(135deg, var(--accent-strong) 0%, var(--accent) 100%);
     transform: translateY(-1px);
 }
 
@@ -200,30 +250,30 @@ h1 {
     padding: 14px 16px;
     max-width: 720px;
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 6px 18px rgba(44, 62, 80, 0.08);
+    background: var(--surface-alt);
+    box-shadow: 0 6px 18px var(--shadow-soft);
     backdrop-filter: blur(6px);
 }
 
 .location-picker-container label {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #334155;
+    color: var(--heading);
 }
 
 .location-picker-container select {
     min-width: 280px;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 1px solid #cbd5e1;
-    background: #fff;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
     font-size: 0.95rem;
-    color: #1f2937;
+    color: var(--text);
     outline: none;
 }
 
 .location-picker-container select:focus {
-    border-color: #0077b6;
+    border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.16);
 }
 
@@ -231,7 +281,7 @@ h1 {
     text-align: center;
     font-size: 1rem;
     font-weight: 600;
-    color: #1d4ed8;
+    color: var(--location);
     margin-bottom: 14px;
     min-height: 1.4em;
 }

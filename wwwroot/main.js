@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const forecastEl = document.getElementById('forecast');
     const errorEl = document.getElementById('error');
     const toggleBtnContainer = document.getElementById('toggle-btn-container');
+    const themeToggleContainer = document.getElementById('theme-toggle-container');
     const cityForm = document.getElementById('city-form');
     const cityInput = document.getElementById('city-input');
     const searchBtn = document.getElementById('search-btn');
@@ -11,28 +12,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     const locationSelect = document.getElementById('location-select');
     const locationConfirmBtn = document.getElementById('location-confirm-btn');
 
-    // Track current unit
     let useCelsius = true;
     let forecastData = [];
+    let hasUserRequestedForecast = false;
 
-    // Enable search only if the city field is filled
     function updateSearchBtn() {
         searchBtn.disabled = !cityInput.value.trim();
     }
     cityInput.addEventListener('input', updateSearchBtn);
 
-    // Add toggle button
+    function hideUnitToggle() {
+        toggleBtnContainer.hidden = true;
+    }
+
+    function showUnitToggle() {
+        toggleBtnContainer.hidden = false;
+    }
+
     const toggleBtn = document.createElement('button');
     toggleBtn.textContent = 'Show °F';
     toggleBtn.className = 'toggle-btn';
-    toggleBtn.style.marginBottom = '20px';
     toggleBtn.onclick = () => {
         useCelsius = !useCelsius;
         toggleBtn.textContent = useCelsius ? 'Show °F' : 'Show °C';
         renderForecast();
     };
-    //forecastEl.parentNode.insertBefore(toggleBtn, forecastEl);
     toggleBtnContainer.appendChild(toggleBtn);
+    hideUnitToggle();
+
+    const themeToggleBtn = document.createElement('button');
+    themeToggleBtn.className = 'toggle-btn theme-toggle-btn';
+
+    function applyTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        themeToggleBtn.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+
+    themeToggleBtn.onclick = () => {
+        const nextTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme);
+    };
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+    themeToggleContainer.appendChild(themeToggleBtn);
 
     function hideLocationPicker() {
         locationPickerContainer.hidden = true;
@@ -68,10 +91,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         return [selection?.name, selection?.state, selection?.country].filter(Boolean).join(', ');
     }
 
-    // Fetch and render forecast for a city
     async function fetchForecast(city, locationSelection = null) {
         errorEl.textContent = '';
         hideLocationPicker();
+        hideUnitToggle();
         forecastEl.innerHTML = '<div class="loading">Loading...</div>';
         try {
             const params = new URLSearchParams({ city });
@@ -103,13 +126,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             forecastData = payload?.forecast || [];
             updateLocationInfo(payload?.location || { name: city });
             renderForecast();
+            if (hasUserRequestedForecast && forecastData.length) {
+                showUnitToggle();
+            }
         } catch (err) {
             forecastEl.innerHTML = '';
             errorEl.textContent = err.message || 'Could not load forecast.';
         }
     }
 
-    // Handle city search
     cityForm.addEventListener('submit', async e => {
         e.preventDefault();
         const city = cityInput.value.trim();
@@ -117,7 +142,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             errorEl.textContent = '';
             forecastEl.innerHTML = '<div class="loading">Loading...</div>';
             searchBtn.disabled = true;
-            await fetchForecast(city);
+            hasUserRequestedForecast = true;
+            await fetchForecast(city, null, true);
             searchBtn.disabled = false;
             history.replaceState(null, '', `?city=${encodeURIComponent(city)}`);
         }
@@ -136,7 +162,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         cityInput.value = selectedLocation.name || cityInput.value.trim();
         forecastTitle.textContent = `${selectedLocation.name || cityInput.value.trim() || 'City'} 5-Day Forecast`;
         locationInfoEl.textContent = formatSelectedLocationLabel(selectedLocation);
-        fetchForecast(cityInput.value.trim(), selectedLocation);
+        hasUserRequestedForecast = true;
+        fetchForecast(cityInput.value.trim(), selectedLocation, true);
     });
 
     function renderForecast() {
@@ -149,7 +176,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
             const dateStr = date.toLocaleDateString(undefined, options);
 
-            // Support both C and F
             const temp = useCelsius
                 ? (day.temperatureC ?? day.temperature)
                 : (day.temperatureF ?? (32 + Math.round((day.temperatureC ?? day.temperature) / 0.5556)));
@@ -182,10 +208,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function getCityFromUrl() {
         const params = new URLSearchParams(window.location.search);
-        return params.get('city') || "Los Angeles";
+        return params.get('city') || 'Los Angeles';
     }
 
-    // Initial load for city in URL or default
     const city = getCityFromUrl();
     cityInput.value = city;
     updateSearchBtn();
